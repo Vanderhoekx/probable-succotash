@@ -9,17 +9,20 @@ import webbrowser
 import time
 import pickle
 
+#Class for the main clock display
 class MainDisplay(Frame):
     def __init__(self, master = None):
         super().__init__(master)
         self.master = master
         self.grid()
         
+#Sets theme for all comboboxes
         self.tk_setPalette(background = 'bisque4', foreground = 'black')
         self.style = ttk.Style()
         self.style.theme_use('clam')
         self.style.configure('TCombobox', fieldbackground = 'green', background = 'bisque4', foreground = 'white')
 
+#Initialize and call any methods/attributes that need to be started on program startup
         self.hour_list = ['{:02d}'.format(num) for num in range(1, 13)]
         self.minute_list = ['{:02d}'.format(num) for num in range(60)]
         self.hours = int(time.ctime()[11:13])
@@ -46,12 +49,14 @@ class MainDisplay(Frame):
         self.clock.itemconfigure(self.date_display, text = self.date_text )
         self.master.after(1000, self._ticker)
 
+#updates clock for main display
     def _ticker(self):
         self.hours = int(time.ctime()[11:13])
         self.minutes = int(time.ctime()[14:16])
         self.seconds = int(time.ctime()[17:19])
         self.main_display()
 
+#Class for the GUI widgets 
 class AlarmWidgets(MainDisplay):
     def alarm_widgets(self):
         alarm_frame = Frame(self)
@@ -110,6 +115,7 @@ class AlarmWidgets(MainDisplay):
         remove_song_btn['bg'] = 'orange'
         remove_song_btn.grid(row = 3, column = 2, sticky = 'N')
 
+#Class that sets/clears and adds URLS to the alarm feature
 class AlarmSet(AlarmWidgets):
     def add_alarm(self):
         self.clock.delete('alarmtext')
@@ -140,7 +146,8 @@ class AlarmSet(AlarmWidgets):
     def _start_alarm(self):
         with open(r'AlarmClock\alarmclock.pkl', 'rb') as alarmurl:
             alarm_url = pickle.load(alarmurl)
-        
+
+#Checks if there is any text on the Canvas, if so it engages the alarm, if not (alarm was cleared) it doesnt engage the alarm            
         if self.clock.find_withtag('titletext'):
             song_url = alarm_url[self.song_list.get()]
             webbrowser.open(url = song_url, autoraise = True)          
