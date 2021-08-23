@@ -134,10 +134,7 @@ class AlarmSet(AlarmWidgets):
         if alarm_ampm == 'PM' and alarm_hours != 12:
             alarm_hours += 12
         
-        alarm_time = ((alarm_hours * 360 + alarm_minutes * 60) - (self.hours * 360 + self.minutes * 60) - self.seconds) * 1000
-        
-        if alarm_time < 0:
-            alarm_time = ((self.hours * 360 + self.minutes * 60) - (alarm_hours * 360 + alarm_minutes * 60) - self.seconds) * 1000
+        alarm_time = abs(((alarm_hours * 360 + alarm_minutes * 60) - (self.hours * 360 + self.minutes * 60) - self.seconds) * 1000)
         
         self.master.after(alarm_time, self._start_alarm)
         self.set_alarm_btn['text'] = 'Clear Alarm'
